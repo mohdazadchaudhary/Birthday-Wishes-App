@@ -15,7 +15,7 @@ class BirthdayViewModel : ViewModel() {
     private val _currentPage = MutableStateFlow(0)
     val currentPage: StateFlow<Int> = _currentPage
 
-   // private val _musicType = MutableStateFlow(MusicType.NONE)
+   //private val _musicType = MutableStateFlow(MusicType.NONE)
     private val _musicType = MutableStateFlow(MusicType.BACKGROUND)
 
     val musicType: StateFlow<MusicType> = _musicType

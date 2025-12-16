@@ -20,16 +20,27 @@ fun BirthdayPager(viewModel: BirthdayViewModel) {
     val pages by viewModel.pages.collectAsState()
     val pagerState = rememberPagerState { pages.size }
 
-    /* 🔁 Auto-slide every 3 seconds */
-    LaunchedEffect(Unit) {
+
+    /*  Auto-slide every 5 seconds */
+    LaunchedEffect(pages.size) {
         while (true) {
-            delay(3000)
-            val nextPage = (pagerState.currentPage + 1) % pages.size
+
+            // ⏸ Pause on last page (do NOT exit)
+            if (pagerState.currentPage == pages.lastIndex) {
+                delay(500) // small idle delay to avoid busy loop
+                continue
+            }
+
+            delay(5000)
+
+            // Move forward safely (NO looping)
+            val nextPage = pagerState.currentPage + 1
             pagerState.animateScrollToPage(nextPage)
         }
     }
 
-    /* 🎵 VERY IMPORTANT: notify ViewModel on page change */
+
+    /*  VERY IMPORTANT: notify ViewModel on page change */
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onPageChanged(pagerState.currentPage)
     }
