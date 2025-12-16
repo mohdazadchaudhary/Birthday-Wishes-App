@@ -1,4 +1,6 @@
 package com.example.birthdaywishesapp.data.model
 
-class BirthdayPage {
-}
+data class BirthdayPage(
+    val id: Int,
+    val imageRes: Int
+)
