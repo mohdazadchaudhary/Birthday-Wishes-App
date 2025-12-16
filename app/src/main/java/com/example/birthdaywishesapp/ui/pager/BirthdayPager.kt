@@ -20,6 +20,7 @@ fun BirthdayPager(viewModel: BirthdayViewModel) {
     val pages by viewModel.pages.collectAsState()
     val pagerState = rememberPagerState { pages.size }
 
+    /* 🔁 Auto-slide every 3 seconds */
     LaunchedEffect(Unit) {
         while (true) {
             delay(3000)
@@ -28,9 +29,14 @@ fun BirthdayPager(viewModel: BirthdayViewModel) {
         }
     }
 
+    /* 🎵 VERY IMPORTANT: notify ViewModel on page change */
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.onPageChanged(pagerState.currentPage)
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
-            state = pagerState, // page count is already in state
+            state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { index ->
             Image(
