@@ -1,175 +1,125 @@
-# 🎂 Birthday Wishes App
+# 🎂 Birthday Wishes App (Jetpack Compose)
 
-A **single‑purpose, emotionally driven Android application** built with **Jetpack Compose + MVVM + Kotlin**. The app presents a **story‑like birthday experience** using full‑screen images, smooth paging, and background music — designed as a *digital letter*, not a utility.
-
----
-
-## ✨ Vision
-
-> Emotion over features. Flow over noise.
-
-This app is crafted to deliver a calm, cinematic birthday journey:
-
-* One screen at a time
-* Full‑screen visuals
-* Gentle transitions
-* Music that supports the moment
-
-No ads. No login. No distractions.
+A **single‑purpose, emotionally driven Android application** built with **Jetpack Compose + MVVM + Kotlin**.
+This project delivers a **5‑frame, story‑like birthday experience** using full‑screen images, auto‑sliding pager, and background music.
 
 ---
 
-## 🧠 Architecture
+## ✨ App Preview (All Frames)
+
+> Below are **all 5 frames exactly as used in the app**. These are rendered full-screen via `HorizontalPager`.
+
+<p align="center">
+  <img src="app/src/main/res/drawable/page1.png" width="200" alt="Page 1" />
+  <img src="app/src/main/res/drawable/page2.png" width="200" alt="Page 2" />
+  <img src="app/src/main/res/drawable/page3.png" width="200" alt="Page 3" />
+  <img src="app/src/main/res/drawable/page4.png" width="200" alt="Page 4" />
+  <img src="app/src/main/res/drawable/page5.png" width="200" alt="Page 5" />
+</p>
+
+---
+
+## 📥 Download APK
+
+<p align="center">
+  <a href="https://github.com/mohdazadchaudhary/Birthday-Wishes-App/releases/download/APK/Birthday.Wishes.App.apk">
+    <img src="https://img.shields.io/badge/⬇️%20Download%20APK-blue?style=for-the-badge" alt="Download APK" />
+  </a>
+</p>
+
+>
+
+---
+
+## 🧠 Architecture Overview
 
 **Pattern:** MVVM (Model–View–ViewModel)
 
-**Why MVVM?**
-
-* Clean separation of UI and logic
-* Predictable state handling with Compose
-* Easy to scale without overengineering
-* Interview‑safe and production‑ready
-
-**Data Flow**
-
 ```
-UI (Compose)
-  ↓ observes
+UI (Jetpack Compose)
+   ↓ observes
 ViewModel (StateFlow)
-  ↓ provides
-Repository (static content)
+   ↓ provides data
+Repository (Static content)
 ```
 
-> No database, no network. Repository exists for structure and clarity.
+This structure ensures:
+
+* Clean separation of concerns
+* Smooth state‑driven UI
+* Easy scalability without overengineering
 
 ---
 
-## 🗂️ Current File Structure
+## 📁 Current Project Structure
 
 ```
 com.example.birthdaywishesapp
-│
-├── data/
-│   └── BirthdayRepository.kt
-│
-├── model/
+├── data
+│   └── repository
+│       └── BirthdayRepository.kt
+├── model
 │   └── BirthdayPage.kt
-│
-├── ui/
-│   ├── pager/
+├── ui
+│   ├── pager
 │   │   └── BirthdayPager.kt
-│   │
-│   ├── pages/
+│   ├── pages
 │   │   └── ImagePage.kt
-│   │
-│   ├── theme/
-│   │   ├── Color.kt
-│   │   ├── Type.kt
-│   │   └── Theme.kt
-│   │
-│   └── util/
+│   ├── theme
+│   └── util
 │       └── MusicPlayer.kt
-│
-├── viewmodel/
+├── viewmodel
 │   └── BirthdayViewModel.kt
-│
 └── MainActivity.kt
 
 res/
-├── drawable/
+├── drawable
 │   ├── page1.png
 │   ├── page2.png
 │   ├── page3.png
 │   ├── page4.png
 │   └── page5.png
-│
-└── raw/
+└── raw
     ├── bg_flow_music.mp3
     └── birthday_celebration.mp3
 ```
 
 ---
 
-## 📱 UI & Navigation
+## 🎶 Audio Experience
 
-* **Navigation:** `HorizontalPager` (no Navigation Component)
-* **Reason:** This is a story, not a multi‑screen app
-* **Interaction:**
-
-    * Auto‑slide between pages
-    * Manual swipe supported
-    * Full‑screen image per page
-
-Each page represents a *moment* in the birthday journey.
+* **Background flow music** for initial pages
+* **Celebration music** on the final frame
+* Managed using native `MediaPlayer`
+* Fully offline, no third‑party dependencies
 
 ---
 
-## 🎵 Music Strategy
+## 🎯 Design Philosophy
 
-* Background music handled via **MediaPlayer**
-* No third‑party audio libraries
-* Music logic centralized in `MusicPlayer`
-* Controlled by `BirthdayViewModel`
+* Emotion first, features second
+* Minimal UI, maximum feeling
+* No unnecessary navigation or clutter
 
-**Audio Files**
-
-* `bg_flow_music.mp3` → calm background flow
-* `birthday_celebration.mp3` → final celebration
-
----
-
-## 🔁 State Management
-
-The app uses **StateFlow** for predictable UI updates:
-
-* `pages : StateFlow<List<BirthdayPage>>`
-* `currentPage : StateFlow<Int>`
-* `musicType : StateFlow<MusicType>`
-
-UI only **observes state** — it does not own business logic.
-
----
-
-## 🛠️ Libraries Used
-
-```gradle
-androidx.compose.material3
-androidx.compose.foundation
-androidx.lifecycle.viewmodel-compose
-```
-
-Minimal by design. Every dependency has a purpose.
+> This app is designed as a **digital birthday letter**, not a utility.
 
 ---
 
 ## 🚧 Current Status
 
-✅ Project structure finalized
-✅ MVVM wired
-✅ Pager working
-✅ Images loading full‑screen
-✅ Music integration implemented
-
-⏸️ Animations intentionally paused for refinement
-
-This repository reflects **work completed up to this stage**.
+* ✅ Pager implemented
+* ✅ Full‑screen image rendering
+* ✅ Auto‑slide logic
+* ✅ Background music system
+* ⏸ Animations paused (future scope)
 
 ---
 
-## 🌱 Next Possible Enhancements (Optional)
+## 🤍 Note
 
-* Fade / cinematic image transitions
-* Subtle text overlays
-* Confetti or Lottie animation on final page
-* Lifecycle‑aware music pause/resume
-
-These are *enhancements*, not requirements.
+This repository documents a **learning journey + a personal project**.
+It is intentionally kept simple, readable, and honest.
 
 ---
 
-## ❤️ Final Note
-
-This app is not about complexity.
-It’s about **care**.
-
-A small idea, built thoughtfully.
+**Made with care, intention, and respect for the experience.**
