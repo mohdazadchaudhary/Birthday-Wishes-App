@@ -1,188 +1,175 @@
-## 1. Objective (Shared Understanding)
+# 🎂 Birthday Wishes App
 
-We are building a **single-purpose, emotionally driven Android app** using **Jetpack Compose + MVVM + Kotlin**. The app delivers a **6-page story-like birthday experience** with animations and background music. This document locks the **technical foundation** before implementation.
+A **single‑purpose, emotionally driven Android application** built with **Jetpack Compose + MVVM + Kotlin**. The app presents a **story‑like birthday experience** using full‑screen images, smooth paging, and background music — designed as a *digital letter*, not a utility.
 
 ---
 
-## 2. Architecture (Why & What)
+## ✨ Vision
 
-### Chosen Architecture: **MVVM (Model–View–ViewModel)**
+> Emotion over features. Flow over noise.
 
-**Why MVVM fits perfectly here:**
+This app is crafted to deliver a calm, cinematic birthday journey:
+
+* One screen at a time
+* Full‑screen visuals
+* Gentle transitions
+* Music that supports the moment
+
+No ads. No login. No distractions.
+
+---
+
+## 🧠 Architecture
+
+**Pattern:** MVVM (Model–View–ViewModel)
+
+**Why MVVM?**
 
 * Clean separation of UI and logic
-* Easy animation & state handling
-* Interview-safe and production-grade
-* Compose works best with unidirectional data flow
+* Predictable state handling with Compose
+* Easy to scale without overengineering
+* Interview‑safe and production‑ready
 
-### Architecture Flow
+**Data Flow**
 
 ```
-UI (Compose Screens)
-   ↓ observes
+UI (Compose)
+  ↓ observes
 ViewModel (StateFlow)
-   ↓ gets data from
-Repository (Static content)
+  ↓ provides
+Repository (static content)
 ```
 
-> No database, no network. Repository exists for **structure & scalability**, not complexity.
+> No database, no network. Repository exists for structure and clarity.
 
 ---
 
-## 3. Modules & Project Structure
-
-### Single-Module App (Recommended)
-
-We intentionally keep **one module** to avoid overengineering.
+## 🗂️ Current File Structure
 
 ```
-app/
- ├─ ui/
- │   ├─ pager/
- │   │   ├─ BirthdayPager.kt
- │   │   ├─ Page1Welcome.kt
- │   │   ├─ Page2Special.kt
- │   │   ├─ Page3Forgot.kt
- │   │   ├─ Page4Wait.kt
- │   │   ├─ Page5Reveal.kt
- │   │   └─ Page6Celebration.kt
- │   ├─ components/
- │   │   ├─ AnimatedText.kt
- │   │   └─ MusicToggle.kt
- │   └─ theme/
- │       ├─ Color.kt
- │       ├─ Type.kt
- │       └─ Theme.kt
- ├─ viewmodel/
- │   └─ BirthdayViewModel.kt
- ├─ data/
- │   ├─ model/
- │   │   └─ BirthdayPage.kt
- │   └─ repository/
- │       └─ BirthdayRepository.kt
+com.example.birthdaywishesapp
+│
+├── data/
+│   └── BirthdayRepository.kt
+│
+├── model/
+│   └── BirthdayPage.kt
+│
+├── ui/
+│   ├── pager/
+│   │   └── BirthdayPager.kt
+│   │
+│   ├── pages/
+│   │   └── ImagePage.kt
+│   │
+│   ├── theme/
+│   │   ├── Color.kt
+│   │   ├── Type.kt
+│   │   └── Theme.kt
+│   │
+│   └── util/
+│       └── MusicPlayer.kt
+│
+├── viewmodel/
+│   └── BirthdayViewModel.kt
+│
+└── MainActivity.kt
+
+res/
+├── drawable/
+│   ├── page1.png
+│   ├── page2.png
+│   ├── page3.png
+│   ├── page4.png
+│   └── page5.png
+│
+└── raw/
+    ├── bg_flow_music.mp3
+    └── birthday_celebration.mp3
 ```
 
 ---
 
-## 4. Libraries (Minimal, Intentional)
+## 📱 UI & Navigation
 
-### Core (Mandatory)
+* **Navigation:** `HorizontalPager` (no Navigation Component)
+* **Reason:** This is a story, not a multi‑screen app
+* **Interaction:**
 
-```gradle
-implementation("androidx.compose.material3:material3")
-implementation("androidx.compose.foundation:foundation")
-implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
-```
+    * Auto‑slide between pages
+    * Manual swipe supported
+    * Full‑screen image per page
 
-Purpose:
-
-* UI rendering
-* Horizontal pager
-* ViewModel integration
+Each page represents a *moment* in the birthday journey.
 
 ---
 
-### Animations (Celebration Layer)
+## 🎵 Music Strategy
 
-```gradle
-implementation("com.airbnb.android:lottie-compose:6.4.0")
-```
+* Background music handled via **MediaPlayer**
+* No third‑party audio libraries
+* Music logic centralized in `MusicPlayer`
+* Controlled by `BirthdayViewModel`
 
-Used for:
+**Audio Files**
 
-* Confetti
-* Balloons
-* Soft celebratory motion (Page 6)
-
----
-
-### Background Music (Native – No Library)
-
-We **do NOT use third-party music libraries**.
-
-We use:
-
-* `android.media.MediaPlayer`
-
-**Why:**
-
-* Lightweight
-* Offline
-* Full control
-* No dependency risk
-
-Music file location:
-
-```
-res/raw/birthday_music.mp3
-```
-
-Controlled entirely from **ViewModel**.
+* `bg_flow_music.mp3` → calm background flow
+* `birthday_celebration.mp3` → final celebration
 
 ---
 
-## 5. State Management Strategy
+## 🔁 State Management
 
-### Single Source of Truth
+The app uses **StateFlow** for predictable UI updates:
 
-In `BirthdayViewModel`:
-
+* `pages : StateFlow<List<BirthdayPage>>`
 * `currentPage : StateFlow<Int>`
-* `isMusicPlaying : StateFlow<Boolean>`
+* `musicType : StateFlow<MusicType>`
 
-UI only **observes state**, never owns logic.
-
----
-
-## 6. Navigation Strategy (Important Decision)
-
-### ❌ No Navigation Component
-
-### ✅ HorizontalPager Only
-
-**Why:**
-
-* This is a story, not an app with screens
-* Pager feels natural, emotional, fluid
-* Less boilerplate, more focus
-
-Pager auto-scroll + swipe enabled.
+UI only **observes state** — it does not own business logic.
 
 ---
 
-## 7. Background Music Strategy
+## 🛠️ Libraries Used
 
-* Music starts on **Page 6 only**
-* Toggle button (Play / Pause)
-* Stops when app goes background
+```gradle
+androidx.compose.material3
+androidx.compose.foundation
+androidx.lifecycle.viewmodel-compose
+```
 
-Handled via:
-
-* ViewModel
-* Lifecycle awareness
-
----
-
-## 8. Design Philosophy (Guiding Principle)
-
-* Emotion > Features
-* Motion with restraint
-* One idea, executed perfectly
-
-> This app is a **digital letter**, not a utility.
+Minimal by design. Every dependency has a purpose.
 
 ---
 
-## 9. What We Will Build Next (Execution Order)
+## 🚧 Current Status
 
-1. Pager scaffold
-2. Page 1 & Page 2 UI
-3. ViewModel state wiring
-4. Animations
-5. Music integration
-6. Final polish
+✅ Project structure finalized
+✅ MVVM wired
+✅ Pager working
+✅ Images loading full‑screen
+✅ Music integration implemented
+
+⏸️ Animations intentionally paused for refinement
+
+This repository reflects **work completed up to this stage**.
 
 ---
 
-**This document is our technical contract.**
-We do not code until this is clear.
+## 🌱 Next Possible Enhancements (Optional)
+
+* Fade / cinematic image transitions
+* Subtle text overlays
+* Confetti or Lottie animation on final page
+* Lifecycle‑aware music pause/resume
+
+These are *enhancements*, not requirements.
+
+---
+
+## ❤️ Final Note
+
+This app is not about complexity.
+It’s about **care**.
+
+A small idea, built thoughtfully.
