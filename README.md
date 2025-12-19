@@ -22,7 +22,7 @@ This project delivers a **5‑frame, story‑like birthday experience** using fu
 ## 📥 Download APK
 
 <p align="center">
-  <a href="https://github.com/mohdazadchaudhary/Birthday-Wishes-App/releases/download/APK/Birthday.Wishes.App.apk">
+  <a href="https://github.com/mohdazadchaudhary/Birthday-Wishes-App/releases/download/APK/Birthday.Wishes.apk">
     <img src="https://img.shields.io/badge/⬇️%20Download%20APK-blue?style=for-the-badge" alt="Download APK" />
   </a>
 </p>
@@ -34,7 +34,7 @@ This project delivers a **5‑frame, story‑like birthday experience** using fu
 ## 📱 QR Code for Direct Download
 
 <p align="center">
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/mohdazadchaudhary/Birthday-Wishes-App/releases/download/APK/Birthday.Wishes.App.apk" alt="QR Code APK Download" />
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/mohdazadchaudhary/Birthday-Wishes-App/releases/download/APK/Birthday.Wishes.apk" alt="QR Code APK Download" />
 </p>
 
 > Scan this QR code to directly download the APK on your device.
