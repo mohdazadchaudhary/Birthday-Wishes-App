@@ -10,6 +10,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.example.birthdaywishesapp.viewmodel.BirthdayViewModel
 import kotlinx.coroutines.delay
 
@@ -20,14 +23,31 @@ fun BirthdayPager(viewModel: BirthdayViewModel) {
     val pages by viewModel.pages.collectAsState()
     val pagerState = rememberPagerState { pages.size }
 
+    /* ✅ Lifecycle awareness (MOVED UP) */
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var isForeground by remember { mutableStateOf(true) }
 
-    /*  Auto-slide every 5 seconds */
-    LaunchedEffect(pages.size) {
-        while (true) {
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            isForeground = when (event) {
+                Lifecycle.Event.ON_START -> true
+                Lifecycle.Event.ON_STOP -> false
+                else -> isForeground
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    /* ⏱ Auto-slide every 5 seconds (LOGIC SAME) */
+    LaunchedEffect(pages.size, isForeground) {
+        while (isForeground) {
 
             // ⏸ Pause on last page (do NOT exit)
             if (pagerState.currentPage == pages.lastIndex) {
-                delay(500) // small idle delay to avoid busy loop
+                delay(500)
                 continue
             }
 
@@ -39,12 +59,12 @@ fun BirthdayPager(viewModel: BirthdayViewModel) {
         }
     }
 
-
-    /*  VERY IMPORTANT: notify ViewModel on page change */
+    /* 📡 Notify ViewModel on page change */
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onPageChanged(pagerState.currentPage)
     }
 
+    /* 🎬 UI */
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
             state = pagerState,

@@ -10,6 +10,10 @@ import com.example.birthdaywishesapp.ui.pager.BirthdayPager
 import com.example.birthdaywishesapp.ui.theme.BirthdayWishesAppTheme
 import com.example.birthdaywishesapp.ui.util.MusicPlayer
 import com.example.birthdaywishesapp.viewmodel.BirthdayViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
+
 
 class MainActivity : ComponentActivity() {
 
@@ -20,29 +24,42 @@ class MainActivity : ComponentActivity() {
         setContent {
             BirthdayWishesAppTheme {
 
-                //  ViewModel
                 val viewModel: BirthdayViewModel = viewModel()
-
-                // Observe music state
                 val musicType by viewModel.musicType.collectAsState()
-
-                //  Music player (remembered once)
                 val musicPlayer = remember { MusicPlayer(this) }
 
-                //  React to music changes
+                val lifecycleOwner = LocalLifecycleOwner.current
+
+                // 🎯 Lifecycle observer
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        when (event) {
+                            Lifecycle.Event.ON_STOP -> {
+                                // App goes to background
+                                musicPlayer.stop()
+                            }
+                            Lifecycle.Event.ON_START -> {
+                                // App comes to foreground
+                                musicPlayer.play(musicType)
+                            }
+                            else -> {}
+                        }
+                    }
+
+                    lifecycleOwner.lifecycle.addObserver(observer)
+
+                    onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
+                        musicPlayer.stop()
+                    }
+                }
+
+                // React to music changes (page based)
                 DisposableEffect(musicType) {
                     musicPlayer.play(musicType)
                     onDispose { }
                 }
 
-                //  Cleanup on app exit
-                DisposableEffect(Unit) {
-                    onDispose {
-                        musicPlayer.stop()
-                    }
-                }
-
-                //  UI
                 BirthdayPager(viewModel = viewModel)
             }
         }
