@@ -27,7 +27,7 @@ This project delivers a **5‑frame, story‑like birthday experience** using fu
   </a>
 </p>
 
->
+> Click this button to directly download the APK on your device.
 
 ---
 
